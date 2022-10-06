@@ -1,5 +1,5 @@
-//CSCI 5611 HW 2 PDE Library
-//Look at GroundTruth.pde and Integrator.pde for more instructions.
+// CSCI 5611 HW 2 PDE Library
+// Look at GroundTruth.pde and Integrator.pde for more instructions.
 
 void RunComparisons() {
   println("==========\nComparison Against the Ground Truth\n==========");
@@ -9,7 +9,7 @@ void RunComparisons() {
   float t_start = 0;
   float x_start = actual_x_of_t(t_start);
   float dt = 1;
-  int n_steps = 10;
+  int n_steps = 20;
   float t_end = t_start + n_steps * dt;
   
   float x_end;
