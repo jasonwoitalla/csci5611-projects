@@ -17,7 +17,7 @@
         },
         "args": [
           "--force",
-          "--sketch=${workspaceRoot}/HW2_Test/",
+          "--sketch=${workspaceRoot}/Proj2/",
           "--output=${workspaceRoot}/out",
           "--run"
         ],
@@ -26,7 +26,7 @@
           "args": [
             "--force",
             {
-              "value": "--sketch=${workspaceRoot}/HW2_Test/",
+              "value": "--sketch=${workspaceRoot}/Proj2/",
               "quoting": "strong"
             },
             {
