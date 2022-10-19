@@ -11,6 +11,8 @@ float airDensity = 0.01;
 static int maxNodes = 100;
 float floor = 500;
 
+PImage wood;
+
 ArrayList<Rope> ropes;
 ArrayList<Sphere> spheres;
 Cloth cloth; 
@@ -26,6 +28,8 @@ void setup() {
     spheres.add(new Sphere(new PVector(350, 400, 210), 100.0));
 
     PImage clothTex = loadImage("images/awesomeface.jpg");
+    wood = loadImage("images/wood.jpg");
+
     cloth = new Cloth(new PVector(250, 50), 12.0, 1000.0, 75.0, 
             20, 20, clothTex);
 }
@@ -59,12 +63,14 @@ void draw() {
 
     cloth.draw();
 
-    fill(200, 200, 50);
+    //fill(200, 200, 50);
+    textureMode(NORMAL);
     beginShape();
-    vertex(-500, 800, -500);
-    vertex(2000, 800, -500);
-    vertex(2000, 800, 2000);
-    vertex(-500, 800, 2000);
+    texture(wood);
+    vertex(-500, 800, -500, 0, 0);
+    vertex(2000, 800, -500, 1, 0);
+    vertex(2000, 800, 2000, 1, 1);
+    vertex(-500, 800, 2000, 0, 1);
     endShape(CLOSE);
 
     camera.Update(1.0/frameRate);

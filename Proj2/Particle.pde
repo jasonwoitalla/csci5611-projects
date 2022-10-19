@@ -5,6 +5,8 @@ public class Particle {
     public PVector acc;
     public PVector newAcc;
 
+    float mu = 0.4;
+
     public Particle(PVector pos) {
         this.pos = pos;
         this.vel = new PVector(0, 0);

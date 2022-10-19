@@ -125,8 +125,8 @@ public class Cloth {
         for(int i = 0; i < numX; i++) {
             for(int j = 0; j < numY; j++) {
                 if(particles[i][j].pos.y > floor) {
-                    particles[i][j].vel.y *= 0;
                     particles[i][j].pos.y = floor;
+                    particles[i][j].vel.mult(-0.8);
                 }
             }
         }
@@ -177,8 +177,5 @@ public class Cloth {
             }
             endShape();
         }
-
-        textSize(32);
-        text("Drag: " + dragOn, 0, 0);
     }
 }
