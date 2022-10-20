@@ -50,7 +50,7 @@ void integrate(PVector pos, PVector vel, PVector acc, float dt) {
 }
 
 void draw() {
-    background(255,255,255);
+    background(255, 255, 255);
     fill(0, 0, 0);
 
     for(int i = 0; i < ropes.size(); i++) {
