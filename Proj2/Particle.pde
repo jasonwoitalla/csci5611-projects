@@ -5,6 +5,10 @@ public class Particle {
     public PVector acc;
     public PVector newAcc;
 
+    public PVector goalPos;
+    boolean hasGoalForce = false;
+    float forceSpeed = 100.0;
+
     float mu = 0.4;
 
     public Particle(PVector pos) {
@@ -17,9 +21,39 @@ public class Particle {
         this.pos = new PVector(x, y, z);
     }
 
-    public void applyGravity() {
-        newAcc = new PVector(0, 0, 0);
-        newAcc.add(gravity);
+    public void setGoalForce(PVector goalPos) {
+        this.goalPos = goalPos;
+        hasGoalForce = true;
+    }
+
+    public void clearGoalForce() {
+        hasGoalForce = false;
+    }
+
+    public void applyForce() {
+        if(!hasGoalForce) {
+            newAcc = new PVector(0, 0, 0);
+            newAcc.add(gravity);
+        } else {
+            //println("Moving to goal");
+            newAcc = new PVector(0, 0, 0);
+            PVector goalForce = PVector.sub(goalPos, pos).normalize();
+            goalForce.mult(forceSpeed);
+
+            newAcc.add(goalForce);
+        }
+    }
+
+    public void addAcc(PVector force) {
+        if(hasGoalForce)
+            return;
+        newAcc.add(force);
+    }
+
+    public void subAcc(PVector force) {
+        if(hasGoalForce)
+            return;
+        newAcc.sub(force);
     }
 
     // Verlet integration

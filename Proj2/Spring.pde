@@ -15,6 +15,7 @@ public class Spring {
     }
 
     public void applyForce() {
+
         PVector diff = PVector.sub(p2.pos, p1.pos);
         float len = diff.mag();
         diff.normalize();
@@ -26,7 +27,7 @@ public class Spring {
         float forceMag = stringF - kd * (v1 - v2);
         PVector force = PVector.mult(diff, forceMag);
 
-        p1.newAcc.add(force);
-        p2.newAcc.sub(force);
+        p1.addAcc(force);
+        p2.subAcc(force);
     }
 }

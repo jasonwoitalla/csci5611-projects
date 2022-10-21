@@ -12,6 +12,10 @@ public class Cloth {
     float kd = 30;
     float dragCoeff = 0.02;
 
+    PVector grabCenter = new PVector(0, 0, 0);
+    int grabAmount = 0;
+    boolean isGrabbing = false;
+
     boolean dragOn = true;
     float floor = 795;
 
@@ -77,14 +81,36 @@ public class Cloth {
         }
     }
 
+    public void setGrab(PVector center, int amount) {
+        grabCenter = center;
+        grabAmount = amount;
+        isGrabbing = true;
+
+        for(int i = int(grabCenter.x) - grabAmount; i < int(grabCenter.x) + grabAmount; i++) {
+            for(int j = int(grabCenter.y) - grabAmount; j < int(grabCenter.y) + grabAmount; j++) {
+                if(i >= 0 && i < numX && j >= 0 && j < numY) { // Don't go out bounds
+                    particles[i][j].vel = new PVector(0, 0, 0);
+                    particles[i][j].setGoalForce(new PVector(mouseX, mouseY, particles[i][j].pos.z));
+                }
+            }
+        }
+    }
+
+    public void clearGrab() {
+        isGrabbing = false;
+        for(int i = int(grabCenter.x) - grabAmount; i < int(grabCenter.x) + grabAmount; i++) {
+            for(int j = int(grabCenter.y) - grabAmount; j < int(grabCenter.y) + grabAmount; j++) {
+                if(i >= 0 && i < numX && j >= 0 && j < numY) { // Don't go out bounds
+                    particles[i][j].clearGoalForce();
+                }
+            }
+        }
+    }
+
     void update(float dt, ArrayList<Sphere> spheres) {
-
-        //eulerianIntegration(dt);
-        //verletIntegration(dt);
-
         for(int i = 0; i < numX; i++) {
             for(int j = 0; j < numY; j++) {
-                particles[i][j].applyGravity();
+                particles[i][j].applyForce();
             }
         }
 
@@ -92,22 +118,16 @@ public class Cloth {
             s.applyForce();
         }
 
-        // Fix Top Row
-        //for(int i = 0; i < numX; i++) {
-            //particles[i][0].newAcc = new PVector(0, 0, 0);
-        //}
-
-        // Drag force of the left triangle
-        /*for(int i = 0; i < numX - 1; i++) {
-            for(int j = 0; j < numY - 1; j++) {
-                dragForce(particles[i][j], particles[i+1][j], particles[i][j+1]);
-            }
-        }
-
-        // Drag force of the right triangle
-        for(int i = numX - 1; i > 0; i--) {
-            for(int j = numY - 1; j > 0; j--) {
-                dragForce(particles[i][j], particles[i-1][j], particles[i][j-1]);
+        // Grabbing
+        /*if(isGrabbing) {
+            for(int i = int(grabCenter.x) - grabAmount; i < int(grabCenter.x) + grabAmount; i++) {
+                for(int j = int(grabCenter.y) - grabAmount; j < int(grabCenter.y) + grabAmount; j++) {
+                    if(i >= 0 && i < numX && j >= 0 && j < numY) { // Don't go out bounds
+                        particles[i][j].newAcc = new PVector(0, 0, 0);
+                        particles[i][j].acc = new PVector(0, 0, 0);
+                        particles[i][j].vel = new PVector(0, 0, 0);
+                    }
+                }
             }
         }*/
 
@@ -126,8 +146,33 @@ public class Cloth {
             for(int j = 0; j < numY; j++) {
                 if(particles[i][j].pos.y > floor) {
                     particles[i][j].pos.y = floor;
-                    particles[i][j].vel.mult(-0.8);
+                    particles[i][j].vel.x *= -0.8;
+                    particles[i][j].vel.y *= -0.4;
+                    particles[i][j].vel.z *= -0.8;
                 }
+            }
+        }
+    }
+
+    void fixTopRow() {
+        //Fix Top Row
+        for(int i = 0; i < numX; i++) {
+            particles[i][0].newAcc = new PVector(0, 0, 0);
+        }
+    }
+
+    void applyDragForce() {
+        // Drag force for the left triangle
+        for(int i = 0; i < numX - 1; i++) {
+            for(int j = 0; j < numY - 1; j++) {
+                dragForce(particles[i][j], particles[i+1][j], particles[i][j+1]);
+            }
+        }
+
+        // Drag force of the right triangle
+        for(int i = numX - 1; i > 0; i--) {
+            for(int j = numY - 1; j > 0; j--) {
+                dragForce(particles[i][j], particles[i-1][j], particles[i][j-1]);
             }
         }
     }

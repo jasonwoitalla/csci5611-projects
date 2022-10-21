@@ -17,6 +17,8 @@ ArrayList<Rope> ropes;
 ArrayList<Sphere> spheres;
 Cloth cloth; 
 
+boolean cameraControl = true;
+
 void setup() {
     size(1024, 782, P3D);
     surface.setTitle(title);
@@ -31,7 +33,7 @@ void setup() {
     wood = loadImage("images/wood.jpg");
 
     cloth = new Cloth(new PVector(250, 50), 12.0, 1000.0, 75.0, 
-            20, 20, clothTex);
+            35, 35, clothTex);
 }
 
 void update(float dt) {
@@ -50,8 +52,10 @@ void integrate(PVector pos, PVector vel, PVector acc, float dt) {
 }
 
 void draw() {
-    background(255, 255, 255);
-    fill(0, 0, 0);
+    background(150, 230, 255);
+    float ambientColor = 165;
+    ambientLight(ambientColor, ambientColor, ambientColor);
+    directionalLight(255, 255, 255, 0, 1, 0);
 
     for(int i = 0; i < ropes.size(); i++) {
         ropes.get(i).draw();
@@ -60,10 +64,10 @@ void draw() {
     for(int i = 0; i < spheres.size(); i++) {
         spheres.get(i).draw();
     }
+    fill(255, 255, 255);
 
     cloth.draw();
 
-    //fill(200, 200, 50);
     textureMode(NORMAL);
     beginShape();
     texture(wood);
@@ -73,11 +77,16 @@ void draw() {
     vertex(-500, 800, 2000, 0, 1);
     endShape(CLOSE);
 
+    drawWalls(wood);
+
     camera.Update(1.0/frameRate);
 
+    //textSize(64);
+    //text("Control Mode: ", 40, 120);
+
     if(!paused) {
-        for(int i = 0; i < 10; i++) {
-            update(1.0/(5.0*frameRate));
+        for(int i = 0; i < 40; i++) {
+            update(1.0/(20.0*frameRate));
         }
         surface.setTitle(title + " " + nf(frameRate,0,2) + "FPS");
     } else {
@@ -85,16 +94,60 @@ void draw() {
     }
 }
 
+void drawWalls(PImage wallTex) {
+    float wallHeight = -500;
+
+    beginShape();
+    texture(wallTex);
+    vertex(-500, wallHeight, -500, 0, 0);
+    vertex(-500, wallHeight, 2000, 1, 0);
+    vertex(-500, 800, 2000, 1, 1);
+    vertex(-500, 800, -500, 0, 1);
+    endShape(CLOSE);
+
+    beginShape();
+    texture(wallTex);
+    vertex(-500, wallHeight, 2000, 0, 0);
+    vertex(2000, wallHeight, 2000, 1, 0);
+    vertex(2000, 800, 2000, 1, 1);
+    vertex(-500, 800, 2000, 0, 1);
+    endShape(CLOSE);
+
+    beginShape();
+    texture(wallTex);
+    vertex(2000, wallHeight, 2000, 0, 0);
+    vertex(2000, wallHeight, -500, 1, 0);
+    vertex(2000, 800, -500, 1, 1);
+    vertex(2000, 800, 2000, 0, 1);
+    endShape(CLOSE);
+
+    beginShape();
+    texture(wallTex);
+    vertex(2000, wallHeight, -500, 0, 0);
+    vertex(-500, wallHeight, -500, 1, 0);
+    vertex(-500, 800, -500, 1, 1);
+    vertex(2000, 800, -500, 0, 1);
+    endShape(CLOSE);
+}
+
 void keyPressed() {
-    camera.HandleKeyPressed();
+    if(cameraControl)
+        camera.HandleKeyPressed();
 
     if (key == ' ') {
         paused = !paused;
     } else if(key == 't') {
         cloth.reset();
+    } else if(key == 'g') {
+        cloth.setGrab(new PVector(10, 10), 5);
     }
 }
 
 void keyReleased() {
-    camera.HandleKeyReleased();
+    if(cameraControl)
+        camera.HandleKeyReleased();
+
+    if(key == 'g') { // release grab
+        cloth.clearGrab();
+    }
 }
