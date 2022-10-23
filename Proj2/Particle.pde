@@ -9,6 +9,7 @@ public class Particle {
     boolean hasGoalForce = false;
     float forceSpeed = 100.0;
 
+    float kGoal = 5.0;
     float mu = 0.4;
 
     public Particle(PVector pos) {
@@ -35,10 +36,12 @@ public class Particle {
             newAcc = new PVector(0, 0, 0);
             newAcc.add(gravity);
         } else {
-            //println("Moving to goal");
             newAcc = new PVector(0, 0, 0);
-            PVector goalForce = PVector.sub(goalPos, pos).normalize();
-            goalForce.mult(forceSpeed);
+            PVector goalVel = PVector.sub(goalPos, pos);
+            if(goalVel.mag() > forceSpeed) goalVel.limit(forceSpeed);
+            
+            PVector goalForce = new PVector(0, 0, 0);
+            goalForce = PVector.sub(goalVel, vel).mult(kGoal);
 
             newAcc.add(goalForce);
         }

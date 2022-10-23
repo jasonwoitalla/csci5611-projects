@@ -19,6 +19,8 @@ public class Cloth {
     boolean dragOn = true;
     float floor = 795;
 
+    ObjMesh hand;
+
     public Cloth(PVector stringTop, float restLen, float ks, float kd, int numX, int numY, PImage texture) {
         this.stringTop = stringTop;
         this.restLen = restLen;
@@ -27,6 +29,10 @@ public class Cloth {
         this.numX = numX;
         this.numY = numY;
         this.texture = texture;
+
+        hand = new ObjMesh("hand_grab/hand_grab.obj");
+        hand.rotation = new PVector(0, 0, 180);
+        hand.scale = 10.0;
 
         reset();
     }
@@ -85,6 +91,7 @@ public class Cloth {
         grabCenter = center;
         grabAmount = amount;
         isGrabbing = true;
+        hand.position = particles[int(grabCenter.x)][int(grabCenter.y)].pos;
 
         for(int i = int(grabCenter.x) - grabAmount; i < int(grabCenter.x) + grabAmount; i++) {
             for(int j = int(grabCenter.y) - grabAmount; j < int(grabCenter.y) + grabAmount; j++) {
@@ -118,18 +125,7 @@ public class Cloth {
             s.applyForce();
         }
 
-        // Grabbing
-        /*if(isGrabbing) {
-            for(int i = int(grabCenter.x) - grabAmount; i < int(grabCenter.x) + grabAmount; i++) {
-                for(int j = int(grabCenter.y) - grabAmount; j < int(grabCenter.y) + grabAmount; j++) {
-                    if(i >= 0 && i < numX && j >= 0 && j < numY) { // Don't go out bounds
-                        particles[i][j].newAcc = new PVector(0, 0, 0);
-                        particles[i][j].acc = new PVector(0, 0, 0);
-                        particles[i][j].vel = new PVector(0, 0, 0);
-                    }
-                }
-            }
-        }*/
+        applyDragForce();
 
         for(int i = 0; i < numX; i++) {
             for(int j = 0; j < numY; j++) {
@@ -185,9 +181,9 @@ public class Cloth {
         PVector aeroF = PVector.mult(normal, -0.5 * airDensity * dragCoeff * coeff);
         aeroF.div(3);
 
-        p1.newAcc.add(aeroF);
-        p2.newAcc.add(aeroF);
-        p3.newAcc.add(aeroF);
+        p1.addAcc(aeroF);
+        p2.addAcc(aeroF);
+        p3.addAcc(aeroF);
     }
 
 
@@ -208,6 +204,14 @@ public class Cloth {
     }
 
     void draw() {
+        if(isGrabbing) {
+            //pushMatrix();
+            //translate(grabCenter.x, grabCenter.y, grabCenter.z);
+            hand.position = particles[int(grabCenter.x)][int(grabCenter.y)].pos;
+            hand.draw();
+            //popMatrix();
+        }
+
         noFill();
         textureMode(NORMAL);
         for(int j = 0; j < numY - 1; j++) {
