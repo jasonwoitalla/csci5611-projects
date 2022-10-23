@@ -125,7 +125,8 @@ public class Cloth {
             s.applyForce();
         }
 
-        applyDragForce();
+        if(dragOn)
+            applyDragForce();
 
         for(int i = 0; i < numX; i++) {
             for(int j = 0; j < numY; j++) {

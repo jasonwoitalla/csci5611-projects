@@ -30,7 +30,8 @@ void reset() {
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
             h[i][j] = 2*sin(6 * i / n) + 2;
-            hu[i][j] = 0;
+            hux[i][j] = 0;
+            huy[i][j] = 0;
         }
     }
 }
@@ -38,10 +39,10 @@ void reset() {
 void update(float dt) {
     // Midpoint + Midpoint derivative arrays
 
-    float[][] h_mid = new float[n][n];
-    float[][] hu_mid = new float[n][n];
-    float[][] dhdt_mid = new float[n][n];
-    float[][] dhudt_mid = new float[n][n];
+    //float[][] h_mid = new float[n][n];
+    //float[][] hu_mid = new float[n][n];
+    //float[][] dhdt_mid = new float[n][n];
+    //float[][] dhudt_mid = new float[n][n];
 
     // Compute midpoints
     for(int i = 0; i < n-1; i++) {
