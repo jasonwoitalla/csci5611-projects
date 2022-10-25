@@ -25,7 +25,7 @@ void setup() {
     ropes = new ArrayList<Rope>();
     spheres = new ArrayList<Sphere>();
     spheres.add(new Sphere(new PVector(350, 200, 50), 100.0));
-    spheres.add(new Sphere(new PVector(350, 400, 210), 100.0));
+    spheres.add(new Sphere(new PVector(350, 400, 280), 100.0));
 
     PImage clothTex = loadImage("images/awesomeface.jpg");
     wood = loadImage("images/wood.jpg");

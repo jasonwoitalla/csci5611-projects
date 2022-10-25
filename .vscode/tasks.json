@@ -17,7 +17,7 @@
         },
         "args": [
           "--force",
-          "--sketch=${workspaceRoot}/Proj2_Fluid/",
+          "--sketch=${workspaceRoot}/Exercises/gradient_descent_exercise/",
           "--output=${workspaceRoot}/out",
           "--run"
         ],
@@ -26,7 +26,7 @@
           "args": [
             "--force",
             {
-              "value": "--sketch=${workspaceRoot}/Proj2_Fluid/",
+              "value": "--sketch=${workspaceRoot}/Exercises/gradient_descent_exercise/",
               "quoting": "strong"
             },
             {
