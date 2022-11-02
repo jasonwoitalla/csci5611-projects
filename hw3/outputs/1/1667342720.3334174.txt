@@ -1,0 +1,10 @@
+Input: 
+Row: 4, Column: 1
+  1.02 
+ -1.05 
+ -0.04 
+  0.15 
+Output: 
+Row: 1, Column: 1
+  0.00 
+Size: 6.815054121034336e-08
