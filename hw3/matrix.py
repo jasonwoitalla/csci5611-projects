@@ -1,3 +1,6 @@
+# Written for CSCI 5611
+# Author: Jason Woitalla
+
 from math import sqrt
 
 class Matrix:

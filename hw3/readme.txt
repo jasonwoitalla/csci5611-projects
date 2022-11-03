@@ -1,0 +1,2 @@
+The approach I tried is using the cross entropy method. This method uses random gaussian samples to improve the guess every iteration. Eventually after a number of iterations it will reach an answer close to 0.
+The program then creates 10 threads to try and minimize each network and picks the smallest one. This allows for my program to minimize everything only once without having to manually pick the best inputs.

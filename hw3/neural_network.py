@@ -1,3 +1,6 @@
+# Written for CSCI 5611
+# Author: Jason Woitalla
+
 from matrix import Matrix
 from random import gauss
 from math import sqrt
@@ -79,9 +82,9 @@ class NeuralNetwork:
         sigma = [1.0 for _ in range(self._input_height)]
         sigma_mag = sqrt(len(sigma))
         t = 0
-        max_iter = 150
-        n = 200 # weights to sample
-        ne = 15 # keep the best ne samples
+        max_iter = 175
+        n = 250 # weights to sample
+        ne = 20 # keep the best ne samples
 
         while t < max_iter and sigma_mag > self._epsilon:
             x = self.sample_gaussian(mean, sigma, n) # sample weights
@@ -90,11 +93,6 @@ class NeuralNetwork:
             # sort by output
             pairs = zip(y, x)
             pairs = sorted(pairs, key=lambda y: y[0])
-            # print("Results of my sort")
-            # for i in range(ne):
-            #     print(pairs[i])
-
-            # get the best ne weights
             x = [pairs[i][1] for i in range(ne)]
 
             # update mean and sigma

@@ -1,17 +1,31 @@
+# Written for CSCI 5611
+# Author: Jason Woitalla
+
 import os
 import sys
 from neural_network import NeuralNetwork
 from matrix import Matrix
 import time
+from threading import Thread
 
 print("Working dir:" + os.getcwd())
+thread_size = 10
+threads = [None] * thread_size
+inputRes = [None] * thread_size
+results = [None] * thread_size
+
+def minimize_thread(nn, index):
+    input = nn.cem_minimize()[0]
+    output = nn.get_output(input)
+    
+    inputRes[index] = input
+    results[index] = output.get_mag()
 
 if __name__ == "__main__":
     neural_networks = []
     smallest_inputs = []
 
-    with open("hw3/networks.txt", "r") as f:
-        # read the first line
+    with open("networks.txt", "r") as f:
         line = f.readline()
         count = 0
         max_networks = 10
@@ -38,9 +52,8 @@ if __name__ == "__main__":
 
                 relu = f.readline().split(":")[1].strip().lower() == "true"
 
-                # create a matrix with the weights
+                # create a matrix with the weights and add the layers
                 matrix = Matrix(cols, rows, weights)
-                # add the layer to the neural network
                 nn.add_layer(matrix, bias_matrix, relu)
             
             example_input = f.readline().split(":")[1].replace(" ", "")
@@ -52,31 +65,28 @@ if __name__ == "__main__":
             example_output = [float(i) for i in example_output]
 
             nn.set_examples(example_input, example_output)
-            # nn.test_network()
-            # print("")
+
             print("Minimizing the network: ")
-            # minimize the network 5 times and select the one with the output smallest size
-            smallest_size = sys.maxsize
-            smallest_input = []
-            smallest_output = []
-            for i in range(5):
-                input = nn.cem_minimize()[0]
-                output = nn.get_output(input)
-                output_size = output.get_mag()
-                if output_size < smallest_size:
-                    smallest_size = output_size
-                    smallest_input = input
-                    smallest_output = output
+            for i in range(len(threads)):
+                threads[i] = Thread(target=minimize_thread, args=(nn, i))
+                threads[i].start()
+
+            for i in range(len(threads)):
+                threads[i].join()
+
+            min_val = min(results)
+            min_input = results.index(min_val)
             print("Output with smallest input: ")
-            output.print_even()
-            smallest_inputs.append(smallest_input)
+            my_output = nn.get_output(inputRes[min_input])
+            my_output.print_even()
+            smallest_inputs.append(inputRes[min_input])
 
             neural_networks.append(nn)
             blank_line = f.readline()
             line = f.readline()
             count = count + 1
         
-    with open("hw3/solutions.txt", "w") as f:
+    with open("solutions.txt", "w") as f: # write the output file
         for i in range(len(smallest_inputs)):
             f.write("[")
             for j in range(len(smallest_inputs[i])):
